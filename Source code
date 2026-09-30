@@ -1,0 +1,423 @@
+-- Pet Care Management System (Oracle Database)
+-- Student: Ayesha Siddika Farhana | ID: 2023200000086 | CSE384 Database Design Lab
+
+-- ===== 1. TABLE CREATION =====
+CREATE TABLE Owner
+(
+    owner_id      CHAR(4) PRIMARY KEY,
+    owner_name    VARCHAR2(100) NOT NULL,
+    phone_number  VARCHAR2(15),
+    owner_address VARCHAR2(255)
+);
+
+CREATE TABLE Pet_Clinic
+(
+    clinic_name VARCHAR2(64) PRIMARY KEY,
+    doctor_name VARCHAR2(100) NOT NULL,
+    medicine    VARCHAR2(255),
+    equipment   VARCHAR2(255),
+    address     VARCHAR2(255)
+);
+
+CREATE TABLE Pet_Store
+(
+    store_id      CHAR(4) PRIMARY KEY,
+    store_name    VARCHAR2(100) NOT NULL,
+    store_address VARCHAR2(255),
+    pet_grooming  VARCHAR2(100),
+    staff_name    VARCHAR2(100),
+    pet_supplies  VARCHAR2(255)
+);
+
+CREATE TABLE Pet
+(
+    pet_name   VARCHAR2(64) PRIMARY KEY,
+    age        NUMBER,
+    fur_color  VARCHAR2(50),
+    type       VARCHAR2(50),
+    body_build VARCHAR2(50),
+    owner_id   CHAR(4),
+    CONSTRAINT fk_pet_owner FOREIGN KEY (owner_id)
+        REFERENCES Owner(owner_id)
+);
+
+CREATE TABLE Clinic_Visit
+(
+    visit_id    NUMBER PRIMARY KEY,
+    pet_name    VARCHAR2(64),
+    clinic_name VARCHAR2(64),
+    visit_date  DATE,
+    fee         NUMBER,
+    status      VARCHAR2(20),
+    CONSTRAINT fk_visit_pet FOREIGN KEY (pet_name)
+        REFERENCES Pet(pet_name),
+    CONSTRAINT fk_visit_clinic FOREIGN KEY (clinic_name)
+        REFERENCES Pet_Clinic(clinic_name)
+);
+
+-- ===== 2. ALTER TABLE =====
+ALTER TABLE Owner ADD Email VARCHAR2(50);
+ALTER TABLE Owner MODIFY Email VARCHAR2(100);
+ALTER TABLE Owner RENAME COLUMN Email TO Owner_Email;
+ALTER TABLE Owner DROP COLUMN Owner_Email;
+
+-- ===== 3. DATA INSERTION =====
+INSERT INTO Owner (owner_id, owner_name, phone_number, owner_address)
+VALUES ('101', 'Tanvir', '01711111111', 'Mirpur, Dhaka');
+INSERT INTO Owner (owner_id, owner_name, phone_number, owner_address)
+VALUES ('102', 'Nadia', '01822222222', 'Uttara, Dhaka');
+INSERT INTO Owner (owner_id, owner_name, phone_number, owner_address)
+VALUES ('103', 'Rafiq', '01933333333', 'Banani, Dhaka');
+INSERT INTO Owner (owner_id, owner_name, phone_number, owner_address)
+VALUES ('104', 'Sadia', '01644444444', 'Dhanmondi, Dhaka');
+INSERT INTO Owner (owner_id, owner_name, phone_number, owner_address)
+VALUES ('105', 'James', '01555555555', 'Gulshan, Dhaka');
+
+INSERT INTO Pet_Clinic (clinic_name, doctor_name, medicine, equipment, address)
+VALUES ('Happy Paws Clinic', 'Dr. Farhana', 'Vaccine, Antibiotics', 'X-ray, MRI', 'Gulshan, Dhaka');
+INSERT INTO Pet_Clinic (clinic_name, doctor_name, medicine, equipment, address)
+VALUES ('Green Tail Vet', 'Dr. Wali', 'Dewormer', 'Surgery Kit', 'Banani, Dhaka');
+INSERT INTO Pet_Clinic (clinic_name, doctor_name, medicine, equipment, address)
+VALUES ('Pet Health Point', 'Dr. Samira', 'Vaccine', 'Ultrasound', 'Mirpur, Dhaka');
+
+INSERT INTO Pet_Store (store_id, store_name, store_address, pet_grooming, staff_name, pet_supplies)
+VALUES ('001', 'Pet World', 'Dhanmondi, Dhaka', 'Bath & Trim', 'Ayesha', 'Food, Toys');
+INSERT INTO Pet_Store (store_id, store_name, store_address, pet_grooming, staff_name, pet_supplies)
+VALUES ('002', 'Furry Store', 'Gulshan, Dhaka', 'Nail Clipping', 'Imran', 'Cages');
+INSERT INTO Pet_Store (store_id, store_name, store_address, pet_grooming, staff_name, pet_supplies)
+VALUES ('003', 'Paw Palace', 'Uttara, Dhaka', 'Bath & Brushing', 'Sumon', 'Food, Beds');
+
+INSERT INTO Pet (pet_name, age, fur_color, type, body_build, owner_id)
+VALUES ('James', 3, 'Brown', 'Cat', 'Large', '101');
+INSERT INTO Pet (pet_name, age, fur_color, type, body_build, owner_id)
+VALUES ('Angel', 1, 'White', 'Cat', 'Small', '102');
+INSERT INTO Pet (pet_name, age, fur_color, type, body_build, owner_id)
+VALUES ('Guri', 2, 'White', 'Cat', 'Small', '101');
+INSERT INTO Pet (pet_name, age, fur_color, type, body_build, owner_id)
+VALUES ('Bruno', 4, 'Brown', 'Dog', 'Large', '103');
+INSERT INTO Pet (pet_name, age, fur_color, type, body_build, owner_id)
+VALUES ('Luna', 2, 'Black', 'Cat', 'Small', '104');
+INSERT INTO Pet (pet_name, age, fur_color, type, body_build, owner_id)
+VALUES ('Max', 5, 'Black', 'Dog', 'Large', '103');
+INSERT INTO Pet (pet_name, age, fur_color, type, body_build, owner_id)
+VALUES ('Coco', 1, 'White', 'Rabbit', 'Small', NULL);
+
+INSERT INTO Clinic_Visit (visit_id, pet_name, clinic_name, visit_date, fee, status)
+VALUES (1, 'James', 'Happy Paws Clinic', TO_DATE('2025-05-10','YYYY-MM-DD'), 500, 'Completed');
+INSERT INTO Clinic_Visit (visit_id, pet_name, clinic_name, visit_date, fee, status)
+VALUES (2, 'Angel', 'Green Tail Vet', TO_DATE('2025-05-12','YYYY-MM-DD'), 300, 'Completed');
+INSERT INTO Clinic_Visit (visit_id, pet_name, clinic_name, visit_date, fee, status)
+VALUES (3, 'Guri', 'Happy Paws Clinic', TO_DATE('2025-05-15','YYYY-MM-DD'), 800, 'Pending');
+INSERT INTO Clinic_Visit (visit_id, pet_name, clinic_name, visit_date, fee, status)
+VALUES (4, 'Bruno', 'Pet Health Point', TO_DATE('2025-05-18','YYYY-MM-DD'), 1200, 'Completed');
+INSERT INTO Clinic_Visit (visit_id, pet_name, clinic_name, visit_date, fee, status)
+VALUES (5, 'James', 'Green Tail Vet', TO_DATE('2025-05-20','YYYY-MM-DD'), 300, 'Completed');
+INSERT INTO Clinic_Visit (visit_id, pet_name, clinic_name, visit_date, fee, status)
+VALUES (6, 'Luna', 'Pet Health Point', TO_DATE('2025-05-22','YYYY-MM-DD'), 600, 'Pending');
+INSERT INTO Clinic_Visit (visit_id, pet_name, clinic_name, visit_date, fee, status)
+VALUES (7, 'Max', 'Happy Paws Clinic', TO_DATE('2025-05-25','YYYY-MM-DD'), 1500, 'Completed');
+INSERT INTO Clinic_Visit (visit_id, pet_name, clinic_name, visit_date, fee, status)
+VALUES (8, 'Bruno', 'Happy Paws Clinic', TO_DATE('2025-05-28','YYYY-MM-DD'), 500, 'Pending');
+
+COMMIT;
+
+-- ===== 4. QUERIES =====
+
+-- 9.1 Retrieving Records (SELECT)
+SELECT pet_name, age, fur_color, type, body_build, owner_id FROM Pet;
+SELECT owner_id, owner_name, phone_number, owner_address FROM Owner;
+
+-- 9.2 AND: Brown pets aged 2 or more
+SELECT pet_name, type FROM Pet
+WHERE age >= 2 AND fur_color = 'Brown';
+
+-- 9.3 OR: Pets that are dogs or cats
+SELECT pet_name, type FROM Pet
+WHERE type = 'Dog' OR type = 'Cat';
+
+-- 9.4 NOT: Clinics that do not stock a vaccine
+SELECT clinic_name, doctor_name FROM Pet_Clinic
+WHERE NOT medicine LIKE '%Vaccine%';
+
+-- 9.5 AND + OR: Stores offering bath service in Dhaka
+SELECT store_name, store_address FROM Pet_Store
+WHERE pet_grooming LIKE '%Bath%'
+  AND (store_address LIKE '%Dhaka%' OR store_name = 'Pet World');
+
+-- 9.6 AND + NOT: Cats that are younger than 2 years
+SELECT pet_name, age FROM Pet
+WHERE type = 'Cat' AND NOT age >= 2;
+
+-- 9.7 OR + NOT: Clinics whose medicine is neither Vaccine nor Antibiotics
+SELECT doctor_name, medicine FROM Pet_Clinic
+WHERE NOT (medicine = 'Vaccine' OR medicine = 'Antibiotics');
+
+-- 9.8 UNION: Distinct names from Pet and Owner
+SELECT pet_name AS entity_name FROM Pet
+UNION
+SELECT owner_name AS entity_name FROM Owner;
+
+-- 9.9 UNION ALL: Names from Pet and Owner with duplicates
+SELECT pet_name AS entity_name FROM Pet
+UNION ALL
+SELECT owner_name AS entity_name FROM Owner;
+
+-- 9.10 INTERSECT: Names used by both a pet and an owner
+SELECT pet_name FROM Pet
+INTERSECT
+SELECT owner_name FROM Owner;
+
+-- 9.11 MINUS: Pet names that are not owner names
+SELECT pet_name FROM Pet
+MINUS
+SELECT owner_name FROM Owner;
+
+-- 9.12 Nested Query using WHERE and IN: Pets with a visit fee above 500
+SELECT pet_name
+FROM Pet
+WHERE pet_name IN
+(
+    SELECT pet_name
+    FROM Clinic_Visit
+    WHERE fee > 500
+);
+
+-- 9.13 Clinics with Pending Visits
+SELECT clinic_name
+FROM Pet_Clinic
+WHERE clinic_name IN
+(
+    SELECT clinic_name
+    FROM Clinic_Visit
+    WHERE status = 'Pending'
+);
+
+-- 9.14 Update Data
+UPDATE Clinic_Visit
+SET status = 'Completed'
+WHERE visit_id = 3;
+
+-- 9.15 WITH Clause & SUM: Total fee paid for each pet
+WITH FeeSummary AS
+(
+    SELECT pet_name, SUM(fee) Total_Fee
+    FROM Clinic_Visit
+    GROUP BY pet_name
+)
+SELECT * FROM FeeSummary ORDER BY pet_name;
+
+-- 9.16 WITH Clause & COUNT: Number of visits for each clinic
+WITH VisitSummary AS
+(
+    SELECT clinic_name, COUNT(*) Total_Visit
+    FROM Clinic_Visit
+    GROUP BY clinic_name
+)
+SELECT * FROM VisitSummary ORDER BY clinic_name;
+
+-- 9.17 GROUP BY & COUNT: Number of pets of each type
+SELECT type, COUNT(*) Total_Pet
+FROM Pet
+GROUP BY type
+ORDER BY type;
+
+-- 9.18 Two-level Nested Query: Pet with the maximum visit fee
+SELECT *
+FROM Pet
+WHERE pet_name =
+(
+    SELECT pet_name
+    FROM Clinic_Visit
+    WHERE fee =
+    (
+        SELECT MAX(fee)
+        FROM Clinic_Visit
+    )
+);
+
+-- 9.19 Two-level Nested Query: Clinic with the maximum visit fee
+SELECT clinic_name, doctor_name, address
+FROM Pet_Clinic
+WHERE clinic_name =
+(
+    SELECT clinic_name FROM Clinic_Visit
+    WHERE fee =
+    (
+        SELECT MAX(fee)
+        FROM Clinic_Visit
+    )
+);
+
+-- 9.20 LIKE with %: Pets whose name starts with B
+SELECT pet_name, type
+FROM Pet
+WHERE pet_name LIKE 'B%';
+
+-- 9.21 LIKE with _: Pets whose second letter is u
+SELECT pet_name, type
+FROM Pet
+WHERE pet_name LIKE '_u%';
+
+-- 9.22 View: Pets that have an owner
+CREATE OR REPLACE VIEW OWNED_PET AS
+SELECT * FROM Pet
+WHERE owner_id IS NOT NULL;
+SELECT pet_name, type, body_build
+FROM OWNED_PET
+WHERE type = 'Cat'
+AND body_build = 'Small';
+
+-- 9.23 SOME: Visits costing more than at least one Green Tail Vet visit
+SELECT visit_id, pet_name, clinic_name, fee
+FROM Clinic_Visit
+WHERE fee > SOME
+(
+    SELECT fee
+    FROM Clinic_Visit
+    WHERE clinic_name = 'Green Tail Vet'
+);
+
+-- 9.24 ALL: Visit with the highest fee
+SELECT visit_id, pet_name, clinic_name, fee
+FROM Clinic_Visit
+WHERE fee >= ALL
+(
+    SELECT fee
+    FROM Clinic_Visit
+);
+
+-- 9.25 EXISTS: Pets that have visited a clinic at least once
+SELECT pet_name, type
+FROM Pet P
+WHERE EXISTS
+(
+    SELECT *
+    FROM Clinic_Visit V
+    WHERE P.pet_name = V.pet_name
+);
+
+-- 9.26 INNER JOIN: Each pet with its owner
+SELECT P.pet_name, O.owner_name
+FROM Pet P
+INNER JOIN Owner O
+ON P.owner_id = O.owner_id
+ORDER BY O.owner_id, P.pet_name;
+
+-- 9.27 LEFT JOIN: All owners, even those without a pet
+SELECT O.owner_name, P.pet_name
+FROM Owner O
+LEFT JOIN Pet P
+ON O.owner_id = P.owner_id
+ORDER BY O.owner_id, P.pet_name;
+
+-- 9.28 RIGHT JOIN: All pets, even those without an owner
+SELECT P.pet_name, O.owner_name
+FROM Owner O
+RIGHT JOIN Pet P
+ON O.owner_id = P.owner_id
+ORDER BY O.owner_id, P.pet_name;
+
+-- 9.29 FULL OUTER JOIN: All owners and all pets
+SELECT O.owner_name, P.pet_name
+FROM Owner O
+FULL OUTER JOIN Pet P
+ON O.owner_id = P.owner_id
+ORDER BY O.owner_id, P.pet_name;
+
+-- 9.30 CROSS JOIN: Every clinic paired with every store
+SELECT C.clinic_name, S.store_name
+FROM Pet_Clinic C
+CROSS JOIN Pet_Store S
+ORDER BY C.clinic_name, S.store_id;
+
+-- ===== 5. PL/SQL =====
+
+-- 11.1 Display Owner Name by ID
+SET SERVEROUTPUT ON;
+DECLARE
+    v_name Owner.owner_name%TYPE;
+BEGIN
+    SELECT owner_name
+    INTO v_name
+    FROM Owner
+    WHERE owner_id = '101';
+
+    DBMS_OUTPUT.PUT_LINE('Owner Name: ' || v_name);
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Owner not found.');
+END;
+/
+
+-- 11.2 Calculate Total Clinic Fee
+SET SERVEROUTPUT ON;
+DECLARE
+    v_total NUMBER;
+BEGIN
+    SELECT SUM(fee)
+    INTO v_total
+    FROM Clinic_Visit;
+
+    DBMS_OUTPUT.PUT_LINE('Total Clinic Fee: ' || v_total);
+END;
+/
+
+-- 11.3 Check Visit Status
+SET SERVEROUTPUT ON;
+DECLARE
+    v_status Clinic_Visit.status%TYPE;
+BEGIN
+    SELECT status
+    INTO v_status
+    FROM Clinic_Visit
+    WHERE visit_id = 6;
+
+    IF v_status = 'Completed' THEN
+        DBMS_OUTPUT.PUT_LINE('Visit is completed.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Visit is still pending.');
+    END IF;
+END;
+/
+
+-- 11.4 Cursor to Display Pending Visits
+SET SERVEROUTPUT ON;
+DECLARE
+    CURSOR c_visit IS
+        SELECT visit_id, pet_name, clinic_name
+        FROM Clinic_Visit
+        WHERE status = 'Pending';
+BEGIN
+    FOR r IN c_visit LOOP
+        DBMS_OUTPUT.PUT_LINE('Visit ' || r.visit_id || ' - ' ||
+                             r.pet_name || ' - ' || r.clinic_name);
+    END LOOP;
+END;
+/
+
+-- 11.5 Procedure to Display Clinic Information
+CREATE OR REPLACE PROCEDURE show_clinic
+(
+    p_clinic_name VARCHAR2
+)
+IS
+    v_doctor  Pet_Clinic.doctor_name%TYPE;
+    v_address Pet_Clinic.address%TYPE;
+BEGIN
+    SELECT doctor_name, address
+    INTO v_doctor, v_address
+    FROM Pet_Clinic
+    WHERE clinic_name = p_clinic_name;
+
+    DBMS_OUTPUT.PUT_LINE('Doctor: ' || v_doctor);
+    DBMS_OUTPUT.PUT_LINE('Address: ' || v_address);
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Clinic not found.');
+END;
+/
+
+BEGIN
+    show_clinic('Happy Paws Clinic');
+END;
+/
